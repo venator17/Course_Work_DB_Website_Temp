@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <title>Звіт: Інвентар</title>
+    <link rel="stylesheet" href="{% static 'circus_app/style.css' %}">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <a href="{% url 'home' %}" class="back-link">← На головну</a>
+            <h1>📦 Звіт: Використання інвентарю</h1>
+        </div>
+    </header>
+
+    <main class="content container">
+        <div class="actions">
+            <a href="{% url 'export_inventory_report_csv' %}" class="btn btn-success">📥 Завантажити CSV</a>
+        </div>
+
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th>Предмет</th>
+                    <th>Тип</th>
+                    <th>Стан</th>
+                    <th>Місцезнаходження</th>
+                    <th>Де використовується</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in inventory_list %}
+                <tr>
+                    <td><strong>{{ item.name }}</strong></td>
+                    <td>{{ item.type }}</td>
+                    <td>{{ item.condition }}</td>
+                    <td>{{ item.location }}</td>
+                    <td>
+                        {% for usage in item.actinventory_set.all %}
+                            <span class="tag">{{ usage.act.name }} ({{ usage.quantity }} шт.)</span>
+                        {% empty %}
+                            <span class="text-muted">Не задіяний</span>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>
