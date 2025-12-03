@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <title>{{ show.program_name }}</title>
+    <link rel="stylesheet" href="{% static 'circus_app/style.css' %}">
+</head>
+<body>
+    <header class="main-header">
+        <h1>{{ show.program_name }}</h1>
+        <p>{{ show.show_datetime|date:"l, d E Y, H:i" }} | Тривалість: {{ show.duration_minutes }} хв</p>
+        <nav><a href="{% url 'home' %}">← На головну</a></nav>
+    </header>
+
+    <main class="content details-layout">
+        <section class="program-section">
+            <h2>🎭 Програма вистави (Номери)</h2>
+            <ul class="acts-list">
+                {% for show_act in acts %}
+                <li>
+                    <span class="act-order">#{{ show_act.act_order }}</span>
+                    <strong>{{ show_act.act.name }}</strong>
+                    <p>{{ show_act.act.description }}</p>
+                    <div class="act-participants">
+                        <small>Артисти: 
+                            {% for act_artist in show_act.act.actartist_set.all %}
+                                {{ act_artist.artist.full_name }}, 
+                            {% endfor %}
+                        </small>
+                    </div>
+                </li>
+                {% empty %}
+                <li>Програма формується...</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section class="tickets-section">
+            <h2>🎟️ Купити квиток</h2>
+            <div class="ticket-grid">
+                {% for ticket in tickets %}
+                <div class="ticket-item">
+                    <div class="seat-info">
+                        Сектор {{ ticket.seat.sector }}, Ряд {{ ticket.seat.row_number }}, Місце {{ ticket.seat.seat_number }}
+                    </div>
+                    <div class="price-tag">{{ ticket.price }} грн</div>
+                    <a href="{% url 'buy_ticket' ticket.id %}" class="btn-buy">Купити</a>
+                </div>
+                {% empty %}
+                <p class="sold-out">Всі квитки продані!</p>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+</body>
+</html>

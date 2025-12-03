@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Цирк "Фантазія"</title>
+    <link rel="stylesheet" href="{% static 'circus_app/style.css' %}">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <h1>🎪 Цирк "Фантазія"</h1>
+            <nav>
+                <a href="{% url 'home' %}">Афіша</a>
+                <a href="{% url 'ticket_report' %}">📊 Звіт: Квитки</a>
+                <a href="{% url 'show_acts_report' %}">🎭 Звіт: Програми</a>
+                <a href="{% url 'inventory_report' %}">📦 Звіт: Інвентар</a>
+                <a href="{% url 'admin:index' %}" class="btn-admin">Вхід для персоналу</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="content container">
+        <h2>Найближчі Вистави</h2>
+        <div class="shows-grid">
+            {% for show in latest_shows %}
+                <div class="show-card">
+                    <div class="card-header">
+                        <h3>{{ show.program_name }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="show-date">📅 {{ show.show_datetime|date:"d.m.Y" }}</p>
+                        <p class="show-time">⏰ {{ show.show_datetime|time:"H:i" }}</p>
+                        <p class="show-duration">⏳ {{ show.duration_minutes }} хв</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'show_details' show.id %}" class="btn btn-primary">Деталі та Квитки</a>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="no-data">На жаль, вистав поки немає.</p>
+            {% endfor %}
+        </div>
+    </main>
+</body>
+</html>
