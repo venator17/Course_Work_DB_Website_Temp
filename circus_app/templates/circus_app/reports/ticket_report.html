@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <title>Звіт: Квитки</title>
+    <link rel="stylesheet" href="{% static 'circus_app/style.css' %}">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <a href="{% url 'home' %}" class="back-link">← На головну</a>
+            <h1>📊 Статистика продажів квитків</h1>
+        </div>
+    </header>
+
+    <main class="content container">
+        <div class="actions">
+            <a href="{% url 'export_ticket_report_csv' %}" class="btn btn-success">📥 Завантажити CSV</a>
+        </div>
+
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th>Вистава</th>
+                    <th>Дата</th>
+                    <th>Всього місць</th>
+                    <th>Продано</th>
+                    <th>Бронь</th>
+                    <th>Вільно</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for show in shows_stats %}
+                <tr>
+                    <td><strong>{{ show.program_name }}</strong></td>
+                    <td>{{ show.show_datetime|date:"d.m.Y H:i" }}</td>
+                    <td>{{ show.total_tickets }}</td>
+                    <td class="sold">{{ show.sold_tickets }}</td>
+                    <td class="reserved">{{ show.reserved_tickets }}</td>
+                    <td class="available">{{ show.available_tickets }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>

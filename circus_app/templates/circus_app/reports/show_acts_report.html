@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <title>Звіт: Програми вистав</title>
+    <link rel="stylesheet" href="{% static 'circus_app/style.css' %}">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <a href="{% url 'home' %}" class="back-link">← На головну</a>
+            <h1>🎭 Звіт: Програми вистав та Артисти</h1>
+        </div>
+    </header>
+
+    <main class="content container">
+        <div class="actions">
+            <a href="{% url 'export_show_acts_report_csv' %}" class="btn btn-success">📥 Завантажити CSV</a>
+        </div>
+
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th>Вистава</th>
+                    <th>Дата</th>
+                    <th>№</th>
+                    <th>Номер</th>
+                    <th>Опис</th>
+                    <th>Артисти</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in show_acts %}
+                <tr>
+                    <td><strong>{{ item.show.program_name }}</strong></td>
+                    <td>{{ item.show.show_datetime|date:"d.m.Y H:i" }}</td>
+                    <td>{{ item.act_order }}</td>
+                    <td>{{ item.act.name }}</td>
+                    <td>{{ item.act.description|truncatechars:50 }}</td>
+                    <td>
+                        {% for artist in item.act.artists.all %}
+                            <span class="tag">{{ artist.full_name }}</span>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>
